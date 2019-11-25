@@ -6,24 +6,27 @@ import java.util.List;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int size = 0;
 
     void clear() {
-        for (int i = 0; i < storage.length - 1; i++) {
+        for (int i = 0; i < size(); i++) {
             storage[i] = null;
         }
+        size = 0;
     }
 
     void save(Resume r) {
         for (int i = 0; i < storage.length - 1; i++) {
             if (storage[i] == null) {
                 storage[i] = r;
+                size++;
                 break;
             }
         }
     }
 
     Resume get(String uuid) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size; i++) {
             if (storage[i].uuid.equals(uuid)) {
                 return storage[i];
             }
@@ -32,12 +35,14 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
-        for (int i = 0; i < size(); i++) {
+        for (int i = 0; i < size() - 1; i++) {
             if (storage[i].uuid.equals(uuid)) {
-                storage[i] = null;
-                break;
+                for (int j = i + 1; j < storage.length; j++) {
+                    storage[j - 1] = storage[j];
+                }
             }
         }
+        size--;
     }
 
     /**
@@ -54,6 +59,6 @@ public class ArrayStorage {
     }
 
     int size() {
-        return getAll().length;
+        return size;
     }
 }
