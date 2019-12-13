@@ -6,8 +6,8 @@ import urise.webapp.model.Resume;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int size = 0;
+    private Resume[] storage = new Resume[10_000];
+    private int size = 0;
 
     public void clear() {
         for (int i = 0; i < size; i++) {
@@ -16,7 +16,7 @@ public class ArrayStorage {
         size = 0;
     }
 
-    void update(Resume resume) {
+    public void update(Resume resume) {
         int index = getIndex(resume.uuid);
         if (index == -1) {
             System.out.println("Resume doesn't exist");
@@ -42,7 +42,6 @@ public class ArrayStorage {
             System.out.println("Resume doesn't exist");
             return null;
         }
-
         return storage[index];
     }
 
@@ -51,9 +50,8 @@ public class ArrayStorage {
         if (index == -1) {
             System.out.println("Resume doesn't exist");
         } else {
-            for (int j = index + 1; j < storage.length; j++) {
-                storage[j - 1] = storage[j];
-            }
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
             size--;
         }
     }
@@ -63,10 +61,12 @@ public class ArrayStorage {
      */
     public Resume[] getAll() {
         Resume[] resumes = new Resume[size];
-        for (int i = 0; i < size; i++) {
-            resumes[i] = storage[i];
-        }
+        System.arraycopy(storage, 0, resumes, 0, size);
         return resumes;
+    }
+
+    public int size() {
+        return size;
     }
 
     private int getIndex(String uuid) {
@@ -76,9 +76,5 @@ public class ArrayStorage {
             }
         }
         return -1;
-    }
-
-    public int size() {
-        return size;
     }
 }
